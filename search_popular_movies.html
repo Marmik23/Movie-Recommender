@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Popular Movies</title>
+    <style>
+        body {
+            font-family: 'Arial', Helvetica, sans-serif;
+            background-color: #282c34;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #ff6347;
+            color: #ffffff;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.8em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .search-container {
+            text-align: center;
+            margin: 30px;
+        }
+
+        .search-input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ff6347;
+            border-radius: 5px;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        .search-button {
+            background-color: #ff6347;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: #ff4500;
+        }
+
+        main {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .movie {
+            background-color: #3c4048;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            transition: transform 0.4s ease;
+        }
+
+        .movie:hover {
+            transform: scale(1.05);
+        }
+
+        .poster {
+            width: 100%;
+            height: auto;
+            border-bottom: 4px solid #ff6347;
+        }
+
+        .details {
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 1.5em;
+            color: #ff4500;
+            margin: 0 0 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .release-date,
+        .vote-average,
+        .vote-count {
+            font-size: 0.95em;
+            color: #dcdcdc;
+            margin: 8px 0;
+        }
+
+        .overview {
+            margin-top: 12px;
+            font-size: 1em;
+            color: #cccccc;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Search Popular Movies</h1>
+    </header>
+    <div class="search-container">
+        <input type="text" id="search-input" class="search-input" placeholder="Search for popular movies...">
+        <button id="search-button" class="search-button">Search</button>
+    </div>
+    <main id="search-results">
+
+    </main>
+    <script>
+        const apiToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YmEwYzU3YzIxYTU3MTNiOGQzNjhiNzMxODgzNThlNSIsIm5iZiI6MTcyMzEyODA2MC42NjI3MDUsInN1YiI6IjY2YjRkNjc0ZjEzZjA5M2FmNzkzYTJkMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zZAQvE3LuEMbiZ3O-HWv-RyADpgKZcoEvIQqDWu66TI';
+
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${apiToken}`
+            }
+        };
+
+        document.getElementById('search-button').addEventListener('click', () => {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            if (query) {
+                fetch('https://api.themoviedb.org/3/movie/popular?language=en-US&page=1', options)
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsContainer = document.getElementById('search-results');
+                        resultsContainer.innerHTML = '';
+
+                        const filteredMovies = data.results.filter(movie => movie.title.toLowerCase().includes(query));
+
+                        if (filteredMovies.length > 0) {
+                            filteredMovies.forEach(movie => {
+                                const movieElement = document.createElement('div');
+                                movieElement.classList.add('movie');
+
+                                const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=No+Image';
+
+                                movieElement.innerHTML = `
+                                    <img src="${poster}" alt="${movie.title} Poster" class="poster">
+                                    <div class="details">
+                                        <h2 class="title">${movie.title}</h2>
+                                        <p class="release-date">Release Date: ${movie.release_date}</p>
+                                        <p class="vote-average">Rating: ${movie.vote_average}</p>
+                                        <p class="vote-count">Votes: ${movie.vote_count}</p>
+                                        <p class="overview">${movie.overview}</p>
+                                    </div>
+                                `;
+
+                                resultsContainer.appendChild(movieElement);
+                            });
+                        } else {
+                            resultsContainer.innerHTML = `<p>No results found for "${query}" in Popular movies.</p>`;
+                        }
+                    })
+                    .catch(error => console.error('Error searching popular movies:', error));
+            }
+        });
+
+        const loadPopularMovies = () => {
+            fetch('https://api.themoviedb.org/3/movie/popular?language=en-US&page=1', options)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsContainer = document.getElementById('search-results');
+                    resultsContainer.innerHTML = '';
+                    data.results.forEach(movie => {
+                        const movieElement = document.createElement('div');
+                        movieElement.classList.add('movie');
+
+                        const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=No+Image';
+
+                        movieElement.innerHTML = `
+                            <img src="${poster}" alt="${movie.title} Poster" class="poster">
+                            <div class="details">
+                                <h2 class="title">${movie.title}</h2>
+                                <p class="release-date">Release Date: ${movie.release_date}</p>
+                                <p class="vote-average">Rating: ${movie.vote_average}</p>
+                                <p class="vote-count">Votes: ${movie.vote_count}</p>
+                                <p class="overview">${movie.overview}</p>
+                            </div>
+                        `;
+
+                        resultsContainer.appendChild(movieElement);
+                    });
+                })
+                .catch(error => console.error('Error fetching popular movies:', error));
+        };
+
+        loadPopularMovies();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watchlist</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Watchlist</h1>
+        <!-- Add navigation bar here if needed -->
+        <nav>
+            <ul>
+                <li><a href="NowPlaying.html">Now Playing</a></li>
+                <li><a href="Popular.html">Popular</a></li>
+                <li><a href="TopRated.html">Top Rated</a></li>
+                <li><a href="UpComing.html">Up Coming</a></li>
+                <li><a href="rate.html">Rate Movies</a></li>
+                <li><a href="favorites.html">Favorites</a></li>
+                <li><a href="watchlist.html">Watchlist</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main id="watchlist-container">
+        <!-- Watchlist will be loaded here -->
+    </main>
+    <script>
+        const apiToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2OTI1YjE4MmViZDdkMTRiNWJkNDQ5NGM4ZmI3YjZlOCIsIm5iZiI6MTcyMzY3Mzk2Ny43MjIwMTksInN1YiI6IjY2YjRkM2RjNzQ5OTNkNTk2ZDQyMjhlNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.M7hv-VqFmnkVLi6RBvyI4jm9K0kPAeJC5BE2vng3Fwg';
+
+        fetch('https://api.themoviedb.org/3/account/21430639/watchlist/movies?language=en-US&page=1', {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${apiToken}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const watchlistContainer = document.getElementById('watchlist-container');
+            data.results.forEach(movie => {
+                const movieElement = document.createElement('div');
+                movieElement.classList.add('movie-card');
+
+                const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://via.placeholder.com/250x375?text=No+Image';
+
+                movieElement.innerHTML = `
+                    <a href="movieDetail.html?id=${movie.id}">
+                    <img src="${poster}" alt="${movie.title} Poster" class="poster">
+                    <div class="details">
+                        <h2 class="title">${movie.title}</h2>
+                        <p class="release-date">Release Date: ${movie.release_date}</p>
+                        <p class="vote-average">Rating: ${movie.vote_average}</p>
+                        <p class="vote-count">Votes: ${movie.vote_count}</p>
+                    </div>
+                    </a>
+                `;
+
+                watchlistContainer.appendChild(movieElement);
+            });
+        })
+        .catch(error => console.error('Error fetching watchlist:', error));
+    </script>
+</body>
+
+</html>

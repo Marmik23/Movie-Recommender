@@ -1,0 +1,88 @@
+<!-- /***************************************************************************** 
+ITC5202 – Project 2 
+I declare that this assignment is my own work in accordance with Humber Academic Policy. No part of this assignment has been copied manually or electronically from any other source (including web sites) or distributed to other students. 
+Group member’s Name: 
+Vatsal Jigneshbhai Mistry (n01649202)
+Marmik Nalinkumar Patel (n01649273)
+Sanket Rameshbhai Vaghasiya (n01650169)
+Date: 09/08/2024
+*****************************************************************************/ -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Rated Movies</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Top Rated Movies</h1>
+        <nav>
+            <ul>
+                <li><a href="NowPlaying.html">Now Playing</a></li>
+                <li><a href="Popular.html">Popular</a></li>
+                <li><a href="TopRated.html">Top Rated</a></li>
+                <li><a href="UpComing.html">Up Coming</a></li>
+                <li><a href="rate.html">Rate Movies</a></li>
+                <li><a href="favorites.html">Favorites</a></li>
+                <li><a href="watchlist.html">Watchlist</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="search-container">
+        <a href="search_toprated_movies.html" class="search-button">Search Movies</a>
+    </div>
+    <main id="movie-container"></main>
+    <script>
+        const apiToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YmEwYzU3YzIxYTU3MTNiOGQzNjhiNzMxODgzNThlNSIsIm5iZiI6MTcyMzEyODA2MC42NjI3MDUsInN1YiI6IjY2YjRkNjc0ZjEzZjA5M2FmNzkzYTJkMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zZAQvE3LuEMbiZ3O-HWv-RyADpgKZcoEvIQqDWu66TI';
+
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${apiToken}`
+            }
+        };
+
+        fetch('https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1', options)
+            .then(response => response.json())
+            .then(data => {
+                const moviesContainer = document.getElementById('movie-container');
+                moviesContainer.innerHTML = '';
+
+                data.results.forEach(movie => {
+                    const movieElement = document.createElement('div');
+                    movieElement.classList.add('movie-card');
+
+                    const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://via.placeholder.com/250x375?text=No+Image';
+
+                    movieElement.innerHTML = `
+                        <a href="movieDetail.html?id=${movie.id}">
+                            <div class="movie-image">
+                                <img src="${poster}" alt="${movie.title} Poster">
+                            </div>
+                            <div class="movie-info">
+                                <h2 class="movie-title">${movie.title}</h2>
+                                <p class="release-date">Release Date: ${movie.release_date}</p>
+                                <p class="vote-average">Rating: ${movie.vote_average}</p>
+                                <p class="vote-count">Votes: ${movie.vote_count}</p>
+                                <p class="overview">${movie.overview ? movie.overview : 'No overview available'}</p>
+                            </div>
+                        </a>
+                    `;
+
+                    moviesContainer.appendChild(movieElement);
+                });
+            })
+            .catch(error => console.error('Error fetching movies:', error));
+    </script>
+    <div class="show-more-container">
+        <button class="show-more-button" onclick="location.href='toprated_movies_showmore.html'">Show more</button>
+    </div>
+</body>
+
+</html>

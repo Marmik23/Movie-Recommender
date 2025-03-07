@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details</title>
+    <style>
+        /* Existing Styles */
+        nav {
+            margin: 20px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            background-color: #3c4048;
+            border-radius: 5px;
+        }
+
+        nav ul li {
+            margin: 0;
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #f5f5f5;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #ff6347;
+        }
+
+        body {
+            font-family: 'Verdana', sans-serif;
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #ff7f50;
+            margin-bottom: 30px;
+            text-transform: capitalize;
+        }
+
+        .movie-detail {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .movie-info {
+            text-align: left;
+        }
+
+        .movie-info h2 {
+            color: #ff6347;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .movie-info p {
+            color: #cfcfcf;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        .movie-info p span {
+            font-weight: bold;
+        }
+
+        .recommendations {
+            margin-top: 30px;
+        }
+
+        .recommendation-card {
+            background-color: #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            width: 220px;
+            height: 350px;
+            margin-right: 15px;
+            vertical-align: top;
+        }
+
+        .recommendation-card:hover {
+            transform: scale(1.03);
+        }
+
+        .recommendation-poster {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .recommendation-title {
+            padding: 10px;
+            color: #ff7f50;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            height: 50px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        /* New Styles */
+        .buttons-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .action-button {
+            background-color: #ff6347;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 5px;
+        }
+
+        .action-button:hover {
+            background-color: #ff4500;
+        }
+
+        .disabled {
+            background-color: #666;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Movie Details</h1>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="NowPlaying.html">Now Playing</a></li>
+                <li><a href="Popular.html">Popular</a></li>
+                <li><a href="TopRated.html">Top Rated</a></li>
+                <li><a href="UpComing.html">Up Coming</a></li>
+                <li><a href="rate.html">Rate Movies</a></li>
+                <li><a href="favorites.html">Favorites</a></li>
+                <li><a href="watchlist.html">Watchlist</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="movie-detail" id="movie-detail">
+        <img id="poster" class="movie-poster" alt="Movie Poster">
+        <div class="movie-info">
+            <h2 id="title">Title</h2>
+            <p><span>Release Date:</span> <span id="release-date"></span></p>
+            <p><span>Rating:</span> <span id="vote-average"></span></p>
+            <p><span>Votes:</span> <span id="vote-count"></span></p>
+            <p id="overview"></p>
+        </div>
+        <div class="buttons-container">
+            <button id="add-favorite" class="action-button">Add to Favorite</button>
+            <button id="remove-favorite" class="action-button disabled">Remove from Favorite</button>
+            <button id="add-watchlist" class="action-button">Add to Watchlist</button>
+            <button id="remove-watchlist" class="action-button disabled">Remove from Watchlist</button>
+            <button id="rate-movie" class="action-button">Rate Movie</button>
+        </div>
+    </div>
+
+    <div class="recommendations" id="recommendations">
+        <h2>Recommended Movies</h2>
+    </div>
+
+    <script>
+        const movieId = new URLSearchParams(window.location.search).get('id');
+        const apiToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2OTI1YjE4MmViZDdkMTRiNWJkNDQ5NGM4ZmI3YjZlOCIsIm5iZiI6MTcyMzEyNzQ4Ni42NjI1MTksInN1YiI6IjY2YjRkM2RjNzQ5OTNkNTk2ZDQyMjhlNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JyC-nU6G-JHYsZYSmU3jmaF4TITKb7JvFDP9wjI0C6g';
+        const accountId = '21430639';
+
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${apiToken}`
+            }
+        };
+
+        function updateButtons() {
+            fetch(`https://api.themoviedb.org/3/account/${accountId}/favorite/movies?language=en-US&page=1`, options)
+                .then(response => response.json())
+                .then(data => {
+                    const isFavorite = data.results.some(movie => movie.id === parseInt(movieId));
+                    document.getElementById('add-favorite').classList.toggle('disabled', isFavorite);
+                    document.getElementById('remove-favorite').classList.toggle('disabled', !isFavorite);
+                });
+
+            fetch(`https://api.themoviedb.org/3/account/${accountId}/watchlist/movies?language=en-US&page=1`, options)
+                .then(response => response.json())
+                .then(data => {
+                    const isWatchlisted = data.results.some(movie => movie.id === parseInt(movieId));
+                    document.getElementById('add-watchlist').classList.toggle('disabled', isWatchlisted);
+                    document.getElementById('remove-watchlist').classList.toggle('disabled', !isWatchlisted);
+                });
+        }
+
+        document.getElementById('add-favorite').addEventListener('click', () => {
+            fetch('https://api.themoviedb.org/3/account/21430639/favorite', {
+                method: 'POST',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${apiToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    media_type: 'movie',
+                    media_id: movieId,
+                    favorite: true
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        updateButtons();
+                    }
+                });
+        });
+
+        document.getElementById('remove-favorite').addEventListener('click', () => {
+            fetch('https://api.themoviedb.org/3/account/21430639/favorite', {
+                method: 'POST',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${apiToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    media_type: 'movie',
+                    media_id: movieId,
+                    favorite: false
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        updateButtons();
+                    }
+                });
+        });
+
+        document.getElementById('add-watchlist').addEventListener('click', () => {
+            fetch('https://api.themoviedb.org/3/account/21430639/watchlist', {
+                method: 'POST',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${apiToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    media_type: 'movie',
+                    media_id: movieId,
+                    watchlist: true
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        updateButtons();
+                    }
+                });
+        });
+
+        document.getElementById('remove-watchlist').addEventListener('click', () => {
+            fetch('https://api.themoviedb.org/3/account/21430639/watchlist', {
+                method: 'POST',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${apiToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    media_type: 'movie',
+                    media_id: movieId,
+                    watchlist: false
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        updateButtons();
+                    }
+                });
+        });
+
+        document.getElementById('rate-movie').addEventListener('click', () => {
+            const rating = prompt('Enter your rating (1-10):');
+            if (rating && rating >= 1 && rating <= 10) {
+                fetch(`https://api.themoviedb.org/3/movie/${movieId}/rating`, {
+                    method: 'POST',
+                    headers: {
+                        accept: 'application/json',
+                        Authorization: `Bearer ${apiToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        value: parseFloat(rating)
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Rating added successfully!');
+                            document.getElementById('vote-average').textContent = rating;
+                        }
+                    });
+            }
+        });
+
+        fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=en-US`, options)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('poster').src = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
+                document.getElementById('title').textContent = data.title;
+                document.getElementById('release-date').textContent = data.release_date;
+                document.getElementById('vote-average').textContent = data.vote_average;
+                document.getElementById('vote-count').textContent = data.vote_count;
+                document.getElementById('overview').textContent = data.overview;
+
+                updateButtons();
+
+                fetch(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=en-US&page=1`, options)
+                    .then(response => response.json())
+                    .then(recData => {
+                        const recommendationsContainer = document.getElementById('recommendations');
+                        recData.results.forEach(recMovie => {
+                            const recElement = document.createElement('div');
+                            recElement.classList.add('recommendation-card');
+
+                            const recPoster = recMovie.poster_path ? `https://image.tmdb.org/t/p/w500${recMovie.poster_path}` : 'https://via.placeholder.com/220x330?text=No+Image';
+
+                            recElement.innerHTML = `
+                                <img src="${recPoster}" alt="${recMovie.title} Poster" class="recommendation-poster">
+                                <div class="recommendation-title">${recMovie.title}</div>
+                            `;
+
+                            recommendationsContainer.appendChild(recElement);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching recommendations:', error));
+            })
+            .catch(error => console.error('Error fetching movie details:', error));
+    </script>
+</body>
+
+</html>

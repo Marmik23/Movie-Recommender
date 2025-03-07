@@ -1,0 +1,213 @@
+<!-- /***************************************************************************** 
+ITC5202 – Project 2 
+I declare that this assignment is my own work in accordance with Humber Academic Policy. No part of this assignment has been copied manually or electronically from any other source (including web sites) or distributed to other students. 
+Group member’s Name: 
+Vatsal Jigneshbhai Mistry (n01649202)
+Marmik Nalinkumar Patel (n01649273)
+Sanket Rameshbhai Vaghasiya (n01650169)
+Date: 09/08/2024
+*****************************************************************************/ -->
+
+/* Ensure navbar visibility and styling */
+nav {
+    margin: 20px 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #3c4048;
+    border-radius: 5px;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #f5f5f5;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #ff6347;
+}
+
+body {
+    font-family: 'Arial', Helvetica, sans-serif;
+    background-color: #282c34;
+    color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header styling */
+header {
+    background-color: #ff6347;
+    color: #ffffff;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Main content grid */
+main {
+    padding: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/* Movie card styling */
+.movie-card {
+    background-color: #3c4048;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.4s ease;
+    margin-bottom: 25px; /* Ensure separation between movie cards */
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+}
+
+.movie-image img {
+    width: 100%;
+    height: auto;
+    border-bottom: 4px solid #ff6347;
+}
+
+.movie-info {
+    padding: 20px;
+}
+
+.movie-info h2 {
+    font-size: 1.5em;
+    color: #ff4500;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.movie-info p {
+    font-size: 1em;
+    color: #cccccc;
+    margin-bottom: 12px;
+}
+
+.vote-average {
+    font-size: 1.2em;
+}
+
+/* Show more button styling */
+.show-more-container {
+    text-align: center;
+    margin: 20px;
+}
+
+.show-more-button {
+    background-color: #ff6347;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.show-more-button:hover {
+    background-color: #ff4500;
+}
+
+/* Search button styling */
+.search-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.search-button {
+    background-color: #ff6347;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 20px;
+}
+
+.search-button:hover {
+    background-color: #ff4500;
+}
+
+/* New styles for action buttons */
+.movie-actions {
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.movie-actions button {
+    background-color: #ff6347;
+    border: none;
+    color: white;
+    padding: 10px;
+    font-size: 0.9em;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.movie-actions button:hover {
+    background-color: #ff7f50;
+}
+
+.movie-actions .rate-btn {
+    background-color: #4CAF50; /* Green */
+}
+
+.movie-actions .rate-btn:hover {
+    background-color: #45a049; /* Darker Green */
+}
+
+.movie-actions .fav-btn {
+    background-color: #ff6347; /* Tomato Red */
+}
+
+.movie-actions .fav-btn:hover {
+    background-color: #e5534c; /* Darker Red */
+}
+
+.movie-actions .watchlist-btn {
+    background-color: #1e90ff; /* Dodger Blue */
+}
+
+.movie-actions .watchlist-btn:hover {
+    background-color: #1c86ee; /* Darker Blue */
+}
